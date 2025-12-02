@@ -2,7 +2,7 @@
 
 This is a fork of [ImDarkTom/RobloxToDesktopShortcut](https://github.com/ImDarkTom/RobloxToDesktopShortcut).
 
-It extends the original project by adding **Steam Integration**, allowing you to launch Roblox games directly from your Steam Library.
+It adapts the project for **Steam**, allowing you to launch Roblox games directly from your Steam Library.
 
 ## Features
 
@@ -45,4 +45,5 @@ Example:
 ```bash
 npm run steam https://www.roblox.com/games/920587237/Adopt-Me
 ```
+
 
