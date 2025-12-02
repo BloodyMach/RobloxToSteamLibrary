@@ -26,7 +26,8 @@ Example:
 npm run steam https://www.roblox.com/games/920587237/Adopt-Me
 ```
 
-**Note**: You must restart Steam to see the new game. The shortcut includes a helper script to ensure Steam correctly detects when you are playing.
+**Note**: You must restart Steam (make sure to shut down the background process as well) to see the new game.
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
+
