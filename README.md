@@ -1,12 +1,17 @@
-# Roblox to Desktop Shortcut
+# Roblox to Steam Library
 
-A small NodeJS project that turns a Roblox game URL into a desktop shortcut.
+This is a fork of [ImDarkTom/RobloxToDesktopShortcut](https://github.com/ImDarkTom/RobloxToDesktopShortcut).
+
+It extends the original project by adding **Steam Integration**, allowing you to launch Roblox games directly from your Steam Library.
+
 ## Features
 
+- **Add to Steam**: Easily add Roblox games as non-Steam games.
+- **Status Support**: Steam correctly shows the game as "Running" while you play.
+- **Stop Support**: Pressing "Stop" in Steam will correctly close the Roblox process.
 - Automatically gets name and icon using the [Roblox API](https://games.roblox.com/docs/index.html).
 - Skips opening a browser by launching the game directly.
 - Converts game icon into ICO format automatically.
-- **Steam Integration**: Adds Roblox games as non-Steam games to your library with "Running" status support.
 
 ## Steam Usage
 
@@ -25,4 +30,3 @@ npm run steam https://www.roblox.com/games/920587237/Adopt-Me
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
-
