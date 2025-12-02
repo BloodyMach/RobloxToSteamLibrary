@@ -4,14 +4,6 @@ const axios = require('axios');
 const shortcut = require('steam-shortcut-editor');
 const pngToIco = require('png-to-ico');
 
-const url = process.argv[2];
-
-if (!url) {
-    console.error('Please specify a Roblox game URL.');
-    process.exit(1);
-}
-
-// Helper to find Steam userdata directory
 function findSteamUserDir() {
     const steamPath = 'C:\\Program Files (x86)\\Steam\\userdata';
     if (!fs.existsSync(steamPath)) {
@@ -19,14 +11,12 @@ function findSteamUserDir() {
     }
     const dirs = fs.readdirSync(steamPath).filter(f => fs.statSync(path.join(steamPath, f)).isDirectory());
     if (dirs.length === 0) return null;
-    // If multiple, just pick the first one for now, or maybe the one with a config folder?
-    // Usually the folders are steam IDs.
     return path.join(steamPath, dirs[0]);
 }
 
-async function addToSteam() {
+async function addToSteam(targetUrl) {
     try {
-        const placeIdMatch = url.match(/[0-9]+/);
+        const placeIdMatch = targetUrl.match(/[0-9]+/);
         if (!placeIdMatch) {
             throw new Error('Could not find place ID in URL');
         }
@@ -47,7 +37,11 @@ async function addToSteam() {
         const iconUrl = iconUrlResponse.data.data[0].imageUrl;
 
         // Ensure icons directory exists
-        const iconsDir = path.join(__dirname, '..', 'gameicons');
+        // When running in pkg, __dirname might be inside snapshot. We should use process.cwd() or a temp dir for icons if we want them to persist or be accessible.
+        // However, Steam needs a persistent path for the icon.
+        // Let's use a dedicated folder in %APPDATA% or similar to be safe, or just relative to the exe.
+        // For now, let's stick to relative to process.cwd() (where the user runs the exe).
+        const iconsDir = path.join(process.cwd(), 'gameicons');
         if (!fs.existsSync(iconsDir)) {
             fs.mkdirSync(iconsDir);
         }
@@ -89,12 +83,23 @@ async function addToSteam() {
         }
 
         // Add new shortcut
+        // IMPORTANT: When packaged, process.execPath is the executable itself.
+        // We need to make sure the launcher script is accessible.
+        // If packaged, we can't just point to src/steamLauncher.js inside the snapshot.
+        // We might need to extract steamLauncher.js to the same folder as the icon or temp.
+
+        // Strategy: Extract steamLauncher.js to iconsDir (which is persistent)
+        const launcherPath = path.join(iconsDir, 'steamLauncher.js');
+        // We need to read the content of steamLauncher.js from our source (or snapshot) and write it there.
+        const sourceLauncherPath = path.join(__dirname, 'steamLauncher.js');
+        fs.copyFileSync(sourceLauncherPath, launcherPath);
+
         const newShortcut = {
             AppName: gameName,
-            Exe: `"${process.execPath}"`,
-            StartDir: `"${path.join(__dirname, '..')}"`,
+            Exe: `"${process.execPath}"`, // Points to our EXE
+            StartDir: `"${iconsDir}"`, // Run from icons dir
             icon: iconPath,
-            LaunchOptions: `"${path.join(__dirname, 'steamLauncher.js')}" ${placeId}`,
+            LaunchOptions: `"${launcherPath}" ${placeId}`, // Pass the extracted launcher path
             IsHidden: false,
             AllowDesktopConfig: true,
             AllowOverlay: true,
@@ -104,7 +109,7 @@ async function addToSteam() {
             tags: {}
         };
 
-        // Check if already exists (optional, but good practice)
+        // Check if already exists
         const exists = shortcuts.shortcuts.some(s => s.AppName === gameName && s.LaunchOptions === newShortcut.LaunchOptions);
         if (exists) {
             console.log('Shortcut already exists.');
@@ -124,4 +129,17 @@ async function addToSteam() {
     }
 }
 
-addToSteam();
+async function run(gameUrl) {
+    if (!gameUrl) {
+        console.error('Please specify a Roblox game URL.');
+        process.exit(1);
+    }
+    await addToSteam(gameUrl);
+}
+
+module.exports = { run };
+
+if (require.main === module) {
+    const url = process.argv[2];
+    run(url);
+}
