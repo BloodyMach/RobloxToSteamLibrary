@@ -8,7 +8,7 @@ It extends the original project by adding **Steam Integration**, allowing you to
 
 - **Add to Steam**: Easily add Roblox games as non-Steam games.
 - **Status Support**: Steam correctly shows the game as "Running" while you play.
-- **Stop Support**: Pressing "Stop" in Steam will correctly close the Roblox process.
+- **Stop Support**: Pressing "Stop" in Steam will close the Roblox process.
 - Automatically gets name and icon using the [Roblox API](https://games.roblox.com/docs/index.html).
 - Skips opening a browser by launching the game directly.
 - Converts game icon into ICO format automatically.
@@ -22,10 +22,20 @@ Follow these steps to set up the program.
 Before you begin, you need to have **Node.js** installed on your computer. If you don't have it, you can download it here:
 
 -   **[Download Node.js](https://nodejs.org/)**
+.
 
-## Steam Usage
+## How to Use
 
-To add a Roblox game to Steam:
+### To use the GUI
+
+1.  **Run the Application**: Double-click on `run_gui.bat` to start the program.
+2.  **Enter Game URL**: Paste the full URL of the Roblox game you want to add (e.g., `https://www.roblox.com/games/123456/Game-Name`).
+3.  **Add to Steam**: Click the "Add to Steam" button.
+4.  **Restart Steam**: You must restart Steam (make sure to close the background processs as well) to see the new shortcut in your library.
+
+### To use command line
+
+If you prefer using the command line, you can add a game directly using `npm`:
 
 ```bash
 npm run steam <roblox_game_url>
@@ -34,32 +44,5 @@ npm run steam <roblox_game_url>
 Example:
 ```bash
 npm run steam https://www.roblox.com/games/920587237/Adopt-Me
-```
-
-**Note**: You must restart Steam (make sure to close the background process as well) to see the new game.
-
-## GUI Usage
-
-You can also use the graphical interface:
-
-1.  Double-click `run_gui.bat`.
-2.  Enter the URL and click **Add to Steam**.
-## Installation
-
-1.  Install [Node.js](https://nodejs.org/).
-2.  Download this repository.
-3.  Open a terminal in the folder and run:
-    ```bash
-    npm install
-    ```
-
-## Usage
-
-### GUI (Recommended)
-Double-click `run_gui.bat`.
-
-### Command Line
-```bash
-npm run steam <roblox_game_url>
 ```
 
